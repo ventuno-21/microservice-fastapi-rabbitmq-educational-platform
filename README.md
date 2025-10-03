@@ -57,47 +57,47 @@ If your function is executed outside the context of FastAPI (for example, a func
 But functions like consumer() or handle_message() are called directly by RabbitMQ, outside of FastAPI’s context, so dependency injection does not work there.  
 
 2nd) Workflow Diagram 
-[User] 
-   |
-   | 1. Register for a course
-   v
-[Registration Service]
-   |
-   | --> publish("registrations", "registration.created")
-   v
-[RabbitMQ Exchange: registrations]
-   |
-   |---(routing_key="registration.created")---> [Payment Service]
-   |
-   v
-------------------------------------------------------------
-[Payment Service]
-   |
-   | 2. Verify payment (e.g., payment gateway)
-   | --> publish("registrations", "registration.paid")
-   v
-[RabbitMQ Exchange: registrations]
-   |
-   |---(routing_key="registration.paid")---> [Course Service]
-   |
-   v
-------------------------------------------------------------
-[Course Service]
-   |
-   | 3. Activate user access to the course
-   | --> publish("registrations", "registration.completed")
-   v
-[RabbitMQ Exchange: registrations]
-   |
-   |---(routing_key="registration.completed")---> [Notification Service]
-   |
-   v
-------------------------------------------------------------
-[Notification Service]
-   |
-   | 4. Send welcome email or SMS to the user
-   v
-[User gets access + notification ✅]
+[User]   
+   |  
+   | 1. Register for a course  
+   v  
+[Registration Service]  
+   |  
+   | --> publish("registrations", "registration.created")  
+   v  
+[RabbitMQ Exchange: registrations]  
+   |  
+   |---(routing_key="registration.created")---> [Payment Service]  
+   |  
+   v  
+------------------------------------------------------------  
+[Payment Service]  
+   |  
+   | 2. Verify payment (e.g., payment gateway)  
+   | --> publish("registrations", "registration.paid")  
+   v  
+[RabbitMQ Exchange: registrations]  
+   |  
+   |---(routing_key="registration.paid")---> [Course Service]  
+   |  
+   v  
+------------------------------------------------------------  
+[Course Service]  
+   |  
+   | 3. Activate user access to the course   
+   | --> publish("registrations", "registration.completed")  
+   v  
+[RabbitMQ Exchange: registrations]   
+   |  
+   |---(routing_key="registration.completed")---> [Notification Service]  
+   |  
+   v 
+------------------------------------------------------------  
+[Notification Service]  
+   |  
+   | 4. Send welcome email or SMS to the user  
+   v  
+[User gets access + notification ✅]  
 
 
 3rd) Message flow in RabbitMQ
