@@ -55,6 +55,8 @@ If your function is executed outside the context of FastAPI (for example, a func
 
 But functions like consumer() or handle_message() are called directly by RabbitMQ, outside of FastAPI’s context, so dependency injection does not work there.  
 
+
+
 **Workflow Diagram** 
 
 [User]   
@@ -100,7 +102,9 @@ But functions like consumer() or handle_message() are called directly by RabbitM
 [User gets access + notification ✅]  
 
 
-**Message flow in RabbitMQ ** 
+
+
+**Message flow in RabbitMQ** 
 The producer publishes a message to an exchange. When creating an exchange, the type must be specified. This topic will be covered later on.  
 The exchange receives the message and is now responsible for routing the message. The exchange takes different message attributes into account, such as the routing key, depending on the exchange type.  
 Bindings must be created from the exchange to queues. In this case, there are two bindings to two different queues from the exchange. The exchange routes the message into the queues depending on message attributes.  
