@@ -34,8 +34,7 @@ python manage.py runserver
 Then POST to registration service:
 `POST http://localhost:8001/register?user_id=1&user_email=test@example.com&course_id=10`
 
-# Notes
-1st)  
+# Notes  
 SessionDep = Annotated[AsyncSession, Depends(get_session)]  
 This is specifically for dependency injection in FastAPI.  
 
@@ -56,7 +55,8 @@ If your function is executed outside the context of FastAPI (for example, a func
 
 But functions like consumer() or handle_message() are called directly by RabbitMQ, outside of FastAPI’s context, so dependency injection does not work there.  
 
-2nd) Workflow Diagram 
+**Workflow Diagram** 
+
 [User]   
    |  
    | 1. Register for a course  
@@ -70,7 +70,7 @@ But functions like consumer() or handle_message() are called directly by RabbitM
    |---(routing_key="registration.created")---> [Payment Service]  
    |  
    v  
-------------------------------------------------------------  
+   
 [Payment Service]  
    |  
    | 2. Verify payment (e.g., payment gateway)  
@@ -80,8 +80,8 @@ But functions like consumer() or handle_message() are called directly by RabbitM
    |  
    |---(routing_key="registration.paid")---> [Course Service]  
    |  
-   v  
-------------------------------------------------------------  
+   v   
+   
 [Course Service]  
    |  
    | 3. Activate user access to the course   
@@ -92,7 +92,7 @@ But functions like consumer() or handle_message() are called directly by RabbitM
    |---(routing_key="registration.completed")---> [Notification Service]  
    |  
    v 
-------------------------------------------------------------  
+
 [Notification Service]  
    |  
    | 4. Send welcome email or SMS to the user  
@@ -100,7 +100,7 @@ But functions like consumer() or handle_message() are called directly by RabbitM
 [User gets access + notification ✅]  
 
 
-3rd) Message flow in RabbitMQ
+**Message flow in RabbitMQ ** 
 The producer publishes a message to an exchange. When creating an exchange, the type must be specified. This topic will be covered later on.  
 The exchange receives the message and is now responsible for routing the message. The exchange takes different message attributes into account, such as the routing key, depending on the exchange type.  
 Bindings must be created from the exchange to queues. In this case, there are two bindings to two different queues from the exchange. The exchange routes the message into the queues depending on message attributes.  
