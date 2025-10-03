@@ -1,0 +1,78 @@
+version: '3.8'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  postgres_reg:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: reg_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+
+  postgres_pay:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: pay_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5434:5432"
+
+  postgres_course:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: course_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5435:5432"
+
+  postgres_notif:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: notif_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5436:5432"
+
+  registration_service:
+    build: ./registration_service
+    depends_on:
+      - rabbitmq
+      - postgres_reg
+    ports:
+      - "8001:8001"
+
+  payment_service:
+    build: ./payment_service
+    depends_on:
+      - rabbitmq
+      - postgres_pay
+    ports:
+      - "8002:8002"
+
+  course_service:
+    build: ./course_service
+    depends_on:
+      - rabbitmq
+      - postgres_course
+    ports:
+      - "8003:8003"
+
+  notification_service:
+    build: ./notification_service
+    depends_on:
+      - rabbitmq
+      - postgres_notif
+    ports:
+      - "8004:8004"

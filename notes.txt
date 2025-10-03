@@ -1,0 +1,44 @@
+
+=========================== How this project works (Workflow Diagram)
+[User] 
+   |
+   | 1. ثبت‌نام در دوره
+   v
+[Registration Service]
+   |
+   | --> publish("registrations", "registration.created")
+   v
+[RabbitMQ Exchange: registrations]
+   |
+   |---(routing_key="registration.created")---> [Payment Service]
+   |
+   v
+------------------------------------------------------------
+[Payment Service]
+   |
+   | 2. بررسی پرداخت (مثلا درگاه بانکی)
+   | --> publish("registrations", "registration.paid")
+   v
+[RabbitMQ Exchange: registrations]
+   |
+   |---(routing_key="registration.paid")---> [Course Service]
+   |
+   v
+------------------------------------------------------------
+[Course Service]
+   |
+   | 3. فعال‌سازی دسترسی کاربر به دوره
+   | --> publish("registrations", "registration.completed")
+   v
+[RabbitMQ Exchange: registrations]
+   |
+   |---(routing_key="registration.completed")---> [Notification Service]
+   |
+   v
+------------------------------------------------------------
+[Notification Service]
+   |
+   | 4. ارسال ایمیل خوش‌آمدگویی یا پیامک به کاربر
+   v
+[User gets access + notification ✅]
+============================================================================

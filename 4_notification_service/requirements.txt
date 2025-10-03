@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+sqlmodel
+SQLAlchemy>=1.4
+asyncpg
+aio-pika
+python-dotenv
+pydantic
